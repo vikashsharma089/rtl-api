@@ -20,5 +20,7 @@ public class PlantInspectionResult {
 
     @Column(name = "HAS_DEFECT")
     private Boolean hasDefect;
+    
+    
 
 }

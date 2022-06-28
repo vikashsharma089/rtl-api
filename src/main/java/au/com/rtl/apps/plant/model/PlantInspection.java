@@ -9,7 +9,8 @@ import java.time.Instant;
 @Entity
 @Table(name = "PLANT_INSPECTION_TX")
 public class PlantInspection {
-    @Id
+    
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PLANT_INSPECTION_TX_ID", nullable = false)
     private Integer plantInspectionId;

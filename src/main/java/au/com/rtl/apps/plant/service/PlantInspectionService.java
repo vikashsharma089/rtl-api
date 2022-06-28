@@ -17,4 +17,9 @@ public class PlantInspectionService {
 	public void  save(List<PlantInspection> plantInspections) {
 		plantInspectionServiceRepository.saveAll(plantInspections);
 	}
+	
+	public PlantInspection  save(PlantInspection model) {
+		model = plantInspectionServiceRepository.save(model);
+		return model;
+	}
 }

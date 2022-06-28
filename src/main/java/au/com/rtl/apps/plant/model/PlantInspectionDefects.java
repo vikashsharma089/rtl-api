@@ -20,6 +20,66 @@ public class PlantInspectionDefects {
 
     @Column(name = "HAS_MEDIA")
     private Boolean hasMedia;
+    
+    @Column(name = "IMAGES")
+    @Lob
+    private byte[] images;
+    
+    @Column(name = "PLANT_INSPECTION_TX_ID", nullable = false)
+    private Integer plantInspectionId;
+    
+    @Column(name = "PLANT_INSPECTION_TEMPLATE_ID", nullable = false)
+    private Integer plantInspectionTemplateId;
+
+	public Integer getPlantInspectionDefectsId() {
+		return plantInspectionDefectsId;
+	}
+
+	public void setPlantInspectionDefectsId(Integer plantInspectionDefectsId) {
+		this.plantInspectionDefectsId = plantInspectionDefectsId;
+	}
+
+	public String getDefectObservation() {
+		return defectObservation;
+	}
+
+	public void setDefectObservation(String defectObservation) {
+		this.defectObservation = defectObservation;
+	}
+
+	public Boolean getHasMedia() {
+		return hasMedia;
+	}
+
+	public void setHasMedia(Boolean hasMedia) {
+		this.hasMedia = hasMedia;
+	}
+
+	public byte[] getImages() {
+		return images;
+	}
+
+	public void setImages(byte[] images) {
+		this.images = images;
+	}
+
+	public Integer getPlantInspectionId() {
+		return plantInspectionId;
+	}
+
+	public void setPlantInspectionId(Integer plantInspectionId) {
+		this.plantInspectionId = plantInspectionId;
+	}
+
+	public Integer getPlantInspectionTemplateId() {
+		return plantInspectionTemplateId;
+	}
+
+	public void setPlantInspectionTemplateId(Integer plantInspectionTemplateId) {
+		this.plantInspectionTemplateId = plantInspectionTemplateId;
+	}
+    
+    
 
 
 

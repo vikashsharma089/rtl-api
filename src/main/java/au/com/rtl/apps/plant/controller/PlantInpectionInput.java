@@ -1,5 +1,7 @@
 package au.com.rtl.apps.plant.controller;
 
+import java.time.Instant;
+
 import javax.persistence.Column;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,14 +17,14 @@ public class PlantInpectionInput {
     
     @JsonProperty( "FILE_NAME")
     private String fileName;
+  
     
-    
-    @JsonProperty( "PLANT_ID" )
-    private Integer plantId;
-  //  plant
     
     @JsonProperty("TEMPLATE_ID")
     private Integer plantInspectionTemplateId;
+    
+    @Column(name = "DEFECT_OBSERVATION", length = 60)
+    private String defectObservation;
 
 	public Boolean getResult() {
 		return result;
@@ -47,14 +49,7 @@ public class PlantInpectionInput {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-
-	public Integer getPlantId() {
-		return plantId;
-	}
-
-	public void setPlantId(Integer plantId) {
-		this.plantId = plantId;
-	}
+	
 
 	public Integer getPlantInspectionTemplateId() {
 		return plantInspectionTemplateId;
@@ -62,6 +57,14 @@ public class PlantInpectionInput {
 
 	public void setPlantInspectionTemplateId(Integer plantInspectionTemplateId) {
 		this.plantInspectionTemplateId = plantInspectionTemplateId;
+	}
+
+	public String getDefectObservation() {
+		return defectObservation;
+	}
+
+	public void setDefectObservation(String defectObservation) {
+		this.defectObservation = defectObservation;
 	}
     
     

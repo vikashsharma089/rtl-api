@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "USERS")
 @Getter
 @Setter
 public class User {
@@ -26,7 +26,8 @@ public class User {
 
     @Column(name = "MOBILE_NO", nullable = false, length = 15)
     private String mobileNo;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private Role userRole;
+    
+    @Column(name = "ROLE_ID", nullable = false)
+    private Integer roleId;
+    
     }

@@ -41,7 +41,13 @@ public class PlantInspection {
 
     @Column(name = "PLANT_ID", nullable = false)
     private Integer plantId;
-  //  plant
+
+    @Column(name = "EMPLOYEE_ID", nullable = false)
+    private Integer employeeId;
+    
+    @Column(name = "EMPLOYEE_IMAGE")
+    @Lob
+    private byte[] emloyeeImage;
 
 
 	public Integer getPlantInspectionId() {
@@ -122,6 +128,22 @@ public class PlantInspection {
 
 	public void setPlantId(Integer plantId) {
 		this.plantId = plantId;
+	}
+
+	public Integer getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Integer employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public byte[] getEmloyeeImage() {
+		return emloyeeImage;
+	}
+
+	public void setEmloyeeImage(byte[] emloyeeImage) {
+		this.emloyeeImage = emloyeeImage;
 	}
 
 	

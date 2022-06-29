@@ -46,10 +46,13 @@ public class InspectionController {
 		ObjectMapper  mapper  = new ObjectMapper();
 		Map<String, byte[]> imageData = new HashMap();
 		for (MultipartFile file : filse) {
-			byte filesByte [] = filse[0].getBytes();
-			String fileName = filse[0].getOriginalFilename();
+			byte filesByte [] = file.getBytes();
+			String fileName = file.getOriginalFilename();
 			imageData.put(fileName, filesByte);
 		}
+		
+	
+		
 		PlantInpectionInputs inputJson = mapper.readValue(inputJsonString, PlantInpectionInputs.class);
 		
 		PlantInspection  plantInspectionModel = new PlantInspection();
@@ -62,6 +65,9 @@ public class InspectionController {
 		plantInspectionModel.setPlantId(inputJson.getPlantId());
 		plantInspectionModel.setRoster(inputJson.getRoster());
 		plantInspectionModel.setShift(inputJson.getShift());
+		plantInspectionModel.setEmployeeId(inputJson.getEmployeId());
+		plantInspectionModel.setEmloyeeImage(imageData.get(inputJson.getEmployeImageFileName()));
+		
 		
 		plantInspectionModel = plantInspectionService.save(plantInspectionModel);
 		

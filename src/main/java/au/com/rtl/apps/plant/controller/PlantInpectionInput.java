@@ -23,10 +23,10 @@ public class PlantInpectionInput {
     @JsonProperty("TEMPLATE_ID")
     private Integer plantInspectionTemplateId;
     
-    @Column(name = "DEFECT_OBSERVATION", length = 60)
+    @JsonProperty("DEFECT_OBSERVATION")
     private String defectObservation;
-
-	public Boolean getResult() {
+    
+    	public Boolean getResult() {
 		return result;
 	}
 
@@ -66,6 +66,8 @@ public class PlantInpectionInput {
 	public void setDefectObservation(String defectObservation) {
 		this.defectObservation = defectObservation;
 	}
+
+	
     
     
 

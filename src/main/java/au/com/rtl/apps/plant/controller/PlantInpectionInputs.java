@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PlantInpectionInputs {
 
-	@JsonProperty("data")
+	@JsonProperty("answer_details")
 	private List<PlantInpectionInput> data;
 	
 	  @Column(name = "LATITUDE")
@@ -38,6 +38,12 @@ public class PlantInpectionInputs {
 
 	    @Column(name = "PLANT_ID", nullable = false)
 	    private Integer plantId;
+	    
+	    @JsonProperty("employee_id")
+	    private Integer employeId;
+	    
+	    @JsonProperty("emp_img_fileName")
+	    private String employeImageFileName;
 
 	public List<PlantInpectionInput> getData() {
 		return data;
@@ -119,6 +125,23 @@ public class PlantInpectionInputs {
 		this.plantId = plantId;
 	}
 	
+	
+
+	public String getEmployeImageFileName() {
+		return employeImageFileName;
+	}
+
+	public void setEmployeImageFileName(String employeImageFileName) {
+		this.employeImageFileName = employeImageFileName;
+	}
+
+	public Integer getEmployeId() {
+		return employeId;
+	}
+
+	public void setEmployeId(Integer employeId) {
+		this.employeId = employeId;
+	}
 	
 	
 	

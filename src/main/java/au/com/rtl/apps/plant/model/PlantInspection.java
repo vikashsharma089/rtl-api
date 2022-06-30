@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.time.Instant;
 
 @Entity
@@ -39,11 +43,15 @@ public class PlantInspection {
     @Column(name = "SHIFT", length = 20)
     private String shift;
 
-    @Column(name = "PLANT_ID", nullable = false)
-    private Integer plantId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @Fetch(FetchMode.SELECT)
+    @JoinColumn(name = "PLANT_ID", referencedColumnName = "PLANT_ID")
+    private Plant plant;
 
-    @Column(name = "EMPLOYEE_ID", nullable = false)
-    private Integer employeeId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @Fetch(FetchMode.SELECT)
+    @JoinColumn(name = "EMPLOYEE_ID", referencedColumnName = "EMPLOYEE_ID")
+    private Employee employee;
     
     @Column(name = "EMPLOYEE_IMAGE")
     @Lob
@@ -122,20 +130,13 @@ public class PlantInspection {
 		this.shift = shift;
 	}
 
-	public Integer getPlantId() {
-		return plantId;
+	
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setPlantId(Integer plantId) {
-		this.plantId = plantId;
-	}
-
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public byte[] getEmloyeeImage() {
@@ -146,6 +147,15 @@ public class PlantInspection {
 		this.emloyeeImage = emloyeeImage;
 	}
 
+	public Plant getPlant() {
+		return plant;
+	}
+
+	public void setPlant(Plant plant) {
+		this.plant = plant;
+	}
+
+	
 	
     
     

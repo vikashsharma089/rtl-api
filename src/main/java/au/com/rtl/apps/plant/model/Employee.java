@@ -27,4 +27,17 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
+
+    
+	public Employee() {
+		super();
+	}
+
+
+	public Employee(Integer employeeId) {
+		super();
+		this.employeeId = employeeId;
+	}
+    
+    
 }

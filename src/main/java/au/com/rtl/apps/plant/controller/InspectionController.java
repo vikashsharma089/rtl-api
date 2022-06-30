@@ -2,6 +2,7 @@ package au.com.rtl.apps.plant.controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,8 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.h2.util.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +21,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import au.com.rtl.apps.plant.model.Employee;
+import au.com.rtl.apps.plant.model.Plant;
 import au.com.rtl.apps.plant.model.PlantInspection;
 import au.com.rtl.apps.plant.model.PlantInspectionDefects;
 import au.com.rtl.apps.plant.model.PlantInspectionResult;
+
 import au.com.rtl.apps.plant.service.PlantInspectionDefectsService;
 import au.com.rtl.apps.plant.service.PlantInspectionResultService;
 import au.com.rtl.apps.plant.service.PlantInspectionService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/inspection")
 public class InspectionController {
 	
 	@Autowired
@@ -40,8 +45,9 @@ public class InspectionController {
 	private PlantInspectionDefectsService plantInspectionDefectsService;
 	
 	
-	@RequestMapping(value = "/submitinpection" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
+	@RequestMapping(value = "/submit" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
     public ResponseEntity<Map> submitInspection(@RequestParam String inputJsonString,  @RequestParam(value="files") MultipartFile[] filse) throws IOException{
+		
 		Map<String,String> response = new HashMap ();
 		ObjectMapper  mapper  = new ObjectMapper();
 		Map<String, byte[]> imageData = new HashMap();
@@ -52,6 +58,7 @@ public class InspectionController {
 		}
 		
 	
+		try {
 		
 		PlantInpectionInputs inputJson = mapper.readValue(inputJsonString, PlantInpectionInputs.class);
 		
@@ -62,10 +69,11 @@ public class InspectionController {
 		plantInspectionModel.setLatitude(inputJson.getLatitude());
 		plantInspectionModel.setLongitude(inputJson.getLongitude());
 		plantInspectionModel.setLocation(inputJson.getLocation());
-		plantInspectionModel.setPlantId(inputJson.getPlantId());
+		plantInspectionModel.setInspectionDateAndTime(Instant.now());
+		plantInspectionModel.setPlant(new Plant(inputJson.getPlantId()));
 		plantInspectionModel.setRoster(inputJson.getRoster());
 		plantInspectionModel.setShift(inputJson.getShift());
-		plantInspectionModel.setEmployeeId(inputJson.getEmployeId());
+		plantInspectionModel.setEmployee(new Employee(inputJson.getEmployeId()));
 		plantInspectionModel.setEmloyeeImage(imageData.get(inputJson.getEmployeImageFileName()));
 		
 		
@@ -99,7 +107,33 @@ public class InspectionController {
 		 }
 		 
 		response.put("status", "success");
+		}catch(Exception e) {
+			response.put("status", "error");
+			response.put("detail", e.getMessage());
+		}
 		
        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+	
+	@RequestMapping(value = "/getInspection", method = RequestMethod.GET,  produces="application/json")
+    public ResponseEntity<Map<String,Object>> getInspection(
+    		@RequestParam(value ="page", defaultValue = "0") int page,
+            @RequestParam(value ="size", defaultValue = "3") int size) {
+		 Map<String, Object> response = new HashMap();
+		try {
+		List<PlantInspection> jsonResponse = new ArrayList<PlantInspection>();
+		 Page<PlantInspection> requestedPage = plantInspectionService.findAllSortByInspectionDate(page, size);
+		 requestedPage.getContent().forEach(jsonResponse::add);
+		
+		response.put("totalElement", requestedPage.getTotalElements());
+		response.put("totalPage", requestedPage.getTotalPages());
+		response.put("numberOfelement", requestedPage.getNumberOfElements());
+		response.put("currentPageNmber", requestedPage.getNumber());
+		response.put("data", jsonResponse);
+	}catch(Exception e) {
+		response.put("status", "error");
+		response.put("detail", e.getMessage());
+	}
+    	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }
 }

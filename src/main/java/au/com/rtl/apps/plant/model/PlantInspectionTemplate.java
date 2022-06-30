@@ -38,4 +38,13 @@ public class PlantInspectionTemplate {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "created_by", referencedColumnName = "user_id")
     private User createBy;
+	@Override
+	public String toString() {
+		return "PlantInspectionTemplate [plantInspectionTemplateId=" + plantInspectionTemplateId
+				+ ", inspectionCategory=" + inspectionCategory + ", sequenceNo=" + sequenceNo
+				+ ", inspectionDescription=" + inspectionDescription + ", isActive=" + isActive + ", createdOn="
+				+ createdOn + ", plant=" + plant + ", createBy=" + createBy + "]";
+	}
+    
+    
 }

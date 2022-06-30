@@ -3,6 +3,8 @@ package au.com.rtl.apps.plant.controller;
 import au.com.rtl.apps.plant.model.PlantInspectionTemplate;
 import au.com.rtl.apps.plant.service.PlantInspectionTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,9 +14,18 @@ import java.util.List;
 public class TemplateController {
     @Autowired
     PlantInspectionTemplateService plantInspectionTemplateService;
-    @GetMapping("/template")
-    public List<PlantInspectionTemplate> getTemplate() {
-        return plantInspectionTemplateService.getAllTemplates();
+   
+    
+    @RequestMapping(value = "/template", method = RequestMethod.GET,  produces="application/json")
+    public ResponseEntity<List<PlantInspectionTemplate>> getTemplate() {
+        return new ResponseEntity<>(plantInspectionTemplateService.getAllTemplates(), HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/template/{plantId}", method = RequestMethod.GET,  produces="application/json")
+    public ResponseEntity<List<PlantInspectionTemplate>> getTemplatePlantWise(@PathVariable("plantId") Integer plantId) {
+    	List<PlantInspectionTemplate> jsonResponse = plantInspectionTemplateService.getSelectedTemplate(plantId);
+    	System.out.print("json response {}"+jsonResponse);
+    	 return new ResponseEntity<>(jsonResponse, HttpStatus.OK); 
     }
 //    @GetMapping("/template/{palntid}")
 //    public List<PlantInspectionTemplate> getTemplatewithPlant(@PathVariable("id") Integer id) {

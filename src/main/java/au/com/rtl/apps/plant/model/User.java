@@ -29,5 +29,13 @@ public class User {
     
     @Column(name = "ROLE_ID", nullable = false)
     private Integer roleId;
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", emailId=" + emailId + ", password=" + password
+				+ ", mobileNo=" + mobileNo + ", roleId=" + roleId + "]";
+	}
+    
+    
     
     }

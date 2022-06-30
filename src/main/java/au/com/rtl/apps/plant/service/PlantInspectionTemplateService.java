@@ -19,12 +19,11 @@ public class PlantInspectionTemplateService {
         return plantInspectionTemplates;
 
     }
-//    public List<PlantInspectionTemplate> getSelectedTemplate(Integer plantId){
-//        List<PlantInspectionTemplate> plantInspectionTemplates= new ArrayList<>();
-//        plantInspectionTemplateRepository.findByPlantId(plantId).forEach(plantInspectionTemplates::add);
-//        return plantInspectionTemplates;
-//
-//    }
+    public List<PlantInspectionTemplate> getSelectedTemplate(Integer plantId){
+        List<PlantInspectionTemplate> plantInspectionTemplates= new ArrayList<>();
+        plantInspectionTemplateRepository.findByPlantId(plantId).forEach(plantInspectionTemplates::add);
+        return plantInspectionTemplates;
+    }
 ////    public List<PlantInspectionTemplate> getSelectedTemplatebyModel(String plantModel){
 //        List<PlantInspectionTemplate> plantInspectionTemplates= new ArrayList<>();
 //        plantInspectionTemplateRepository.findByPlantModel(plantModel).forEach(plantInspectionTemplates::add);

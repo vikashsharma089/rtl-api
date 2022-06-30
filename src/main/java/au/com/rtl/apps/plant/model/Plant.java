@@ -31,5 +31,13 @@ public class Plant {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "plant_type_id", referencedColumnName = "plant_type_id")
     private PlantType plantType;
+	@Override
+	public String toString() {
+		return "Plant [plantId=" + plantId + ", plantName=" + plantName + ", plantModel=" + plantModel + ", isWorking="
+				+ isWorking + ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + ", plantType=" + plantType
+				+ "]";
+	}
 
+    
+    
     }

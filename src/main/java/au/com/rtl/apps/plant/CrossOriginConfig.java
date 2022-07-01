@@ -13,7 +13,7 @@ public class CrossOriginConfig implements WebMvcConfigurer {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/api/v1/operations/jobs/plant/prestart/**").allowedOrigins("*");
+				registry.addMapping("/api/v1/operations/jobs/plant/prestart/**").allowedOrigins("*").allowedHeaders("*").allowCredentials(true).allowedMethods("*");
 			}
 		};
 	}

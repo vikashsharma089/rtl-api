@@ -32,7 +32,7 @@ import au.com.rtl.apps.plant.service.PlantInspectionResultService;
 import au.com.rtl.apps.plant.service.PlantInspectionService;
 
 @RestController
-@RequestMapping("/inspection")
+@RequestMapping("/api/v1/operations/jobs/plant/prestart")
 public class InspectionController {
 	
 	@Autowired
@@ -45,7 +45,7 @@ public class InspectionController {
 	private PlantInspectionDefectsService plantInspectionDefectsService;
 	
 	
-	@RequestMapping(value = "/submit" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
+	@RequestMapping(value = "/inpection" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
     public ResponseEntity<Map> submitInspection(@RequestParam String inputJsonString,  @RequestParam(value="files") MultipartFile[] filse) throws IOException{
 		
 		Map<String,String> response = new HashMap ();

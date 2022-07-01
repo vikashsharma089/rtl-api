@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/operations/jobs/plant/prestart")
+@RequestMapping("/api/v1/operations/jobs/plant/prestart")
 public class TemplateController {
     @Autowired
     PlantInspectionTemplateService plantInspectionTemplateService;

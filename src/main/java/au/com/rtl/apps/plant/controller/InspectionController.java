@@ -52,6 +52,8 @@ public class InspectionController {
 	private DigitalAssetService digitalAssetService;
 	
 	
+	
+	
 	@RequestMapping(value = "/inpection" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
     public ResponseEntity<Map> submitInspection(@RequestParam String inputJsonString,  @RequestParam(value="files") MultipartFile[] filse) throws IOException{
 		
@@ -91,11 +93,11 @@ public class InspectionController {
 		for(PlantInpectionInput data : allInput) { 
 		  PlantInspectionResult resultModel  = new PlantInspectionResult();
 		  resultModel.setHasDefect(data.getHasDefect());
-		  resultModel.setPlantInspectionId(plantInspectionModel.getPlantInspectionId());
+		  resultModel.setPlantInspection(plantInspectionModel);
 		  resultModel.setPlantInspectionTemplateId(data.getPlantInspectionTemplateId());
 		  resultModel.setResult(data.getResult());
 		  
-		  plantInspectionResultService.save(resultModel);
+		  
 		  
 		 if( data.getHasDefect()) {
 			 PlantInspectionDefects defectesModel = new PlantInspectionDefects();
@@ -113,8 +115,11 @@ public class InspectionController {
 			 
 			 defectesModel.setPlantInspectionId(plantInspectionModel.getPlantInspectionId());
 			 defectesModel.setPlantInspectionTemplateId(data.getPlantInspectionTemplateId());
-			 plantInspectionDefectsService.save(defectesModel);
+			 defectesModel = plantInspectionDefectsService.save(defectesModel);
+			 resultModel.setDefects(defectesModel);
 		 }
+		 
+		 plantInspectionResultService.save(resultModel);
 		  
 		 }
 		 
@@ -174,5 +179,29 @@ public class InspectionController {
     	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }
 	
+	
+	@RequestMapping(value = "/getResultByInspection/{inspectionId}", method = RequestMethod.GET,  produces="application/json")
+    public ResponseEntity<Map<String,Object>> getResultByInspection(
+    		@PathVariable("inspectionId") Integer inspection,
+    		@RequestParam(value ="page", defaultValue = "0") int page,
+            @RequestParam(value ="size", defaultValue = "3") int size) {
+		 Map<String, Object> response = new HashMap();
+		try {
+		List<PlantInspectionResult> jsonResponse = new ArrayList<PlantInspectionResult>();
+		 Page<PlantInspectionResult> requestedPage = plantInspectionResultService.findAllResultByInspectionSorBytPlant(inspection,page, size);
+		 requestedPage.getContent().forEach(jsonResponse::add);
+		
+		response.put("totalElement", requestedPage.getTotalElements());
+		response.put("totalPage", requestedPage.getTotalPages());
+		response.put("numberOfelement", requestedPage.getNumberOfElements());
+		response.put("currentPageNmber", requestedPage.getNumber());
+		response.put("data", jsonResponse);
+	}catch(Exception e) {
+		
+		response.put("status", "error");
+		response.put("detail", e.getMessage());
+	}
+    	 return new ResponseEntity<>(response, HttpStatus.OK); 
+    }
 
 }

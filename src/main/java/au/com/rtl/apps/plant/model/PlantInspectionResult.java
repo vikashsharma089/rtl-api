@@ -21,8 +21,13 @@ public class PlantInspectionResult {
     @Column(name = "HAS_DEFECT")
     private Boolean hasDefect;
     
-    @Column(name = "PLANT_INSPECTION_TX_ID", nullable = false)
-    private Integer plantInspectionId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLANT_INSPECTION_TX_ID", referencedColumnName = "PLANT_INSPECTION_TX_ID")
+    private PlantInspection plantInspection;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "DEFECT_ID", referencedColumnName = "PLANT_INSPECTION_DEFECTS_TX_ID", nullable = true)
+    private PlantInspectionDefects defects;
     
     @Column(name = "PLANT_INSPECTION_TEMPLATE_ID", nullable = false)
     private Integer plantInspectionTemplateId;
@@ -51,12 +56,13 @@ public class PlantInspectionResult {
 		this.hasDefect = hasDefect;
 	}
 
-	public Integer getPlantInspectionId() {
-		return plantInspectionId;
+	
+	public PlantInspection getPlantInspection() {
+		return plantInspection;
 	}
 
-	public void setPlantInspectionId(Integer plantInspectionId) {
-		this.plantInspectionId = plantInspectionId;
+	public void setPlantInspection(PlantInspection plantInspection) {
+		this.plantInspection = plantInspection;
 	}
 
 	public Integer getPlantInspectionTemplateId() {
@@ -66,7 +72,16 @@ public class PlantInspectionResult {
 	public void setPlantInspectionTemplateId(Integer plantInspectionTemplateId) {
 		this.plantInspectionTemplateId = plantInspectionTemplateId;
 	}
+
+	public PlantInspectionDefects getDefects() {
+		return defects;
+	}
+
+	public void setDefects(PlantInspectionDefects defects) {
+		this.defects = defects;
+	}
     
+	
     
 
 }

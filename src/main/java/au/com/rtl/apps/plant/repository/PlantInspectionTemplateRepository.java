@@ -12,8 +12,8 @@ public interface PlantInspectionTemplateRepository extends JpaRepository<PlantIn
    
 	
 	  @Query(value = "SELECT * FROM plant_inspection_template WHERE plant_id=?1",
-	  nativeQuery = true) Collection<PlantInspectionTemplate> findByPlantId(Integer
-	  plantId);
+	  nativeQuery = true) 
+	  Collection<PlantInspectionTemplate> findByPlantId(Integer plantId);
 	
 
 }

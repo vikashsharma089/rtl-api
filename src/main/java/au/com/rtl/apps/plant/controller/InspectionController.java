@@ -149,4 +149,30 @@ public class InspectionController {
 	}
     	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }
+
+	@RequestMapping(value = "/getInspectionDetail/{plantId}", method = RequestMethod.GET,  produces="application/json")
+    public ResponseEntity<Map<String,Object>> getInspectionDetail(
+    		@PathVariable("plantId") Integer plantId,
+    		@RequestParam(value ="page", defaultValue = "0") int page,
+            @RequestParam(value ="size", defaultValue = "3") int size) {
+		 Map<String, Object> response = new HashMap();
+		try {
+		List<PlantInspection> jsonResponse = new ArrayList<PlantInspection>();
+		 Page<PlantInspection> requestedPage = plantInspectionService.findAllByPlantSortByInspectionDate(plantId,page, size);
+		 requestedPage.getContent().forEach(jsonResponse::add);
+		
+		response.put("totalElement", requestedPage.getTotalElements());
+		response.put("totalPage", requestedPage.getTotalPages());
+		response.put("numberOfelement", requestedPage.getNumberOfElements());
+		response.put("currentPageNmber", requestedPage.getNumber());
+		response.put("data", jsonResponse);
+	}catch(Exception e) {
+		
+		response.put("status", "error");
+		response.put("detail", e.getMessage());
+	}
+    	 return new ResponseEntity<>(response, HttpStatus.OK); 
+    }
+	
+
 }

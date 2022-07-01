@@ -21,9 +21,11 @@ public class PlantInspectionDefects {
     @Column(name = "HAS_MEDIA")
     private Boolean hasMedia;
     
-    @Column(name = "IMAGES")
-    @Lob
-    private byte[] images;
+   
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "DEFECT_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID")
+    private  DigitalAsset defectImage;
+    
     
     @Column(name = "PLANT_INSPECTION_TX_ID", nullable = false)
     private Integer plantInspectionId;
@@ -55,12 +57,14 @@ public class PlantInspectionDefects {
 		this.hasMedia = hasMedia;
 	}
 
-	public byte[] getImages() {
-		return images;
+
+
+	public DigitalAsset getDefectImage() {
+		return defectImage;
 	}
 
-	public void setImages(byte[] images) {
-		this.images = images;
+	public void setDefectImage(DigitalAsset defectImage) {
+		this.defectImage = defectImage;
 	}
 
 	public Integer getPlantInspectionId() {

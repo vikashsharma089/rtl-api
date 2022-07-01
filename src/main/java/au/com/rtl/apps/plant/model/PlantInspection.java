@@ -53,9 +53,10 @@ public class PlantInspection {
     @JoinColumn(name = "EMPLOYEE_ID", referencedColumnName = "EMPLOYEE_ID")
     private Employee employee;
     
-    @Column(name = "EMPLOYEE_IMAGE")
-    @Lob
-    private byte[] emloyeeImage;
+ 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "EMPLOYEE_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID")
+    private  DigitalAsset employeeImage;
 
 
 	public Integer getPlantInspectionId() {
@@ -139,12 +140,15 @@ public class PlantInspection {
 		this.employee = employee;
 	}
 
-	public byte[] getEmloyeeImage() {
-		return emloyeeImage;
+	
+
+
+	public DigitalAsset getEmployeeImage() {
+		return employeeImage;
 	}
 
-	public void setEmloyeeImage(byte[] emloyeeImage) {
-		this.emloyeeImage = emloyeeImage;
+	public void setEmployeeImage(DigitalAsset employeeImage) {
+		this.employeeImage = employeeImage;
 	}
 
 	public Plant getPlant() {

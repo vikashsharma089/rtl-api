@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import au.com.rtl.apps.plant.model.DigitalAsset;
 import au.com.rtl.apps.plant.model.Employee;
 import au.com.rtl.apps.plant.model.Plant;
 import au.com.rtl.apps.plant.model.PlantInspection;
 import au.com.rtl.apps.plant.model.PlantInspectionDefects;
 import au.com.rtl.apps.plant.model.PlantInspectionResult;
-
+import au.com.rtl.apps.plant.service.DigitalAssetService;
 import au.com.rtl.apps.plant.service.PlantInspectionDefectsService;
 import au.com.rtl.apps.plant.service.PlantInspectionResultService;
 import au.com.rtl.apps.plant.service.PlantInspectionService;
@@ -34,6 +36,8 @@ import au.com.rtl.apps.plant.service.PlantInspectionService;
 @RestController
 @RequestMapping("/api/v1/operations/jobs/plant/prestart")
 public class InspectionController {
+	
+	Logger logger = LoggerFactory.getLogger(InspectionController.class);
 	
 	@Autowired
 	private PlantInspectionService plantInspectionService;
@@ -44,17 +48,19 @@ public class InspectionController {
 	@Autowired
 	private PlantInspectionDefectsService plantInspectionDefectsService;
 	
+	@Autowired 
+	private DigitalAssetService digitalAssetService;
+	
 	
 	@RequestMapping(value = "/inpection" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
     public ResponseEntity<Map> submitInspection(@RequestParam String inputJsonString,  @RequestParam(value="files") MultipartFile[] filse) throws IOException{
 		
 		Map<String,String> response = new HashMap ();
 		ObjectMapper  mapper  = new ObjectMapper();
-		Map<String, byte[]> imageData = new HashMap();
+		Map<String, MultipartFile> imageData = new HashMap();
 		for (MultipartFile file : filse) {
-			byte filesByte [] = file.getBytes();
 			String fileName = file.getOriginalFilename();
-			imageData.put(fileName, filesByte);
+			imageData.put(fileName, file);
 		}
 		
 	
@@ -74,7 +80,9 @@ public class InspectionController {
 		plantInspectionModel.setRoster(inputJson.getRoster());
 		plantInspectionModel.setShift(inputJson.getShift());
 		plantInspectionModel.setEmployee(new Employee(inputJson.getEmployeId()));
-		plantInspectionModel.setEmloyeeImage(imageData.get(inputJson.getEmployeImageFileName()));
+		
+		DigitalAsset empDigitalAsset  = digitalAssetService.save(imageData.get(inputJson.getEmployeImageFileName()));
+		plantInspectionModel.setEmployeeImage(empDigitalAsset);
 		
 		
 		plantInspectionModel = plantInspectionService.save(plantInspectionModel);
@@ -92,7 +100,11 @@ public class InspectionController {
 		 if( data.getHasDefect()) {
 			 PlantInspectionDefects defectesModel = new PlantInspectionDefects();
 			 defectesModel.setDefectObservation(data.getDefectObservation());
-			 defectesModel.setImages(imageData.get(data.getFileName()));
+			
+			 DigitalAsset defectDigitalAsset  = digitalAssetService.save(imageData.get(data.getFileName()));
+				
+			 defectesModel.setDefectImage(defectDigitalAsset);
+			 
 			 if(data.getFileName() != null) {
 				 defectesModel.setHasMedia(true);
 			 }else {
@@ -131,6 +143,7 @@ public class InspectionController {
 		response.put("currentPageNmber", requestedPage.getNumber());
 		response.put("data", jsonResponse);
 	}catch(Exception e) {
+		
 		response.put("status", "error");
 		response.put("detail", e.getMessage());
 	}

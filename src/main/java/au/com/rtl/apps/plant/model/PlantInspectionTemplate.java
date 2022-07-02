@@ -31,8 +31,17 @@ public class PlantInspectionTemplate {
 
     @Column(name = "CREATED_ON")
     private Instant createdOn;
+    
+    
 
-    @OneToOne(cascade = CascadeType.ALL)
+    public PlantInspectionTemplate() {
+		super();
+	}
+	public PlantInspectionTemplate(Integer plantInspectionTemplateId) {
+		super();
+		this.plantInspectionTemplateId = plantInspectionTemplateId;
+	}
+	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "plant_id", referencedColumnName = "plant_id")
     private Plant plant;
     @OneToOne(cascade = CascadeType.ALL)

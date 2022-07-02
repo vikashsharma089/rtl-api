@@ -23,7 +23,7 @@ public class PlantInspectionDefects {
     
    
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "DEFECT_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID")
+    @JoinColumn(name = "DEFECT_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID",  nullable = true)
     private  DigitalAsset defectImage;
     
     

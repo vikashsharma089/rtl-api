@@ -29,8 +29,9 @@ public class PlantInspectionResult {
     @JoinColumn(name = "DEFECT_ID", referencedColumnName = "PLANT_INSPECTION_DEFECTS_TX_ID", nullable = true)
     private PlantInspectionDefects defects;
     
-    @Column(name = "PLANT_INSPECTION_TEMPLATE_ID", nullable = false)
-    private Integer plantInspectionTemplateId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "TEMPLATE_ID", referencedColumnName = "PLANT_INSPECTION_TEMPLATE_ID", nullable = true)
+    private PlantInspectionTemplate plantInspectionTemplateId;
 
 	public Integer getPlantInspectionReultId() {
 		return plantInspectionReultId;
@@ -65,11 +66,13 @@ public class PlantInspectionResult {
 		this.plantInspection = plantInspection;
 	}
 
-	public Integer getPlantInspectionTemplateId() {
+	
+
+	public PlantInspectionTemplate getPlantInspectionTemplateId() {
 		return plantInspectionTemplateId;
 	}
 
-	public void setPlantInspectionTemplateId(Integer plantInspectionTemplateId) {
+	public void setPlantInspectionTemplateId(PlantInspectionTemplate plantInspectionTemplateId) {
 		this.plantInspectionTemplateId = plantInspectionTemplateId;
 	}
 

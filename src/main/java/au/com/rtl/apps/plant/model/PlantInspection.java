@@ -55,7 +55,7 @@ public class PlantInspection {
     
  
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "EMPLOYEE_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID")
+    @JoinColumn(name = "EMPLOYEE_IMAGE_ID", referencedColumnName = "DIGITAL_ASSET_ID",  nullable = true)
     private  DigitalAsset employeeImage;
 
 

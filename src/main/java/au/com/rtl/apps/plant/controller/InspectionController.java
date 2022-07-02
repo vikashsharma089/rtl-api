@@ -28,12 +28,14 @@ import au.com.rtl.apps.plant.model.Plant;
 import au.com.rtl.apps.plant.model.PlantInspection;
 import au.com.rtl.apps.plant.model.PlantInspectionDefects;
 import au.com.rtl.apps.plant.model.PlantInspectionResult;
+import au.com.rtl.apps.plant.model.PlantInspectionTemplate;
 import au.com.rtl.apps.plant.service.DigitalAssetService;
 import au.com.rtl.apps.plant.service.PlantInspectionDefectsService;
 import au.com.rtl.apps.plant.service.PlantInspectionResultService;
 import au.com.rtl.apps.plant.service.PlantInspectionService;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/operations/jobs/plant/prestart")
 public class InspectionController {
 	
@@ -83,8 +85,11 @@ public class InspectionController {
 		plantInspectionModel.setShift(inputJson.getShift());
 		plantInspectionModel.setEmployee(new Employee(inputJson.getEmployeId()));
 		
-		DigitalAsset empDigitalAsset  = digitalAssetService.save(imageData.get(inputJson.getEmployeImageFileName()));
-		plantInspectionModel.setEmployeeImage(empDigitalAsset);
+		if(imageData.get(inputJson.getEmployeImageFileName()) != null) {
+			DigitalAsset empDigitalAsset  = digitalAssetService.save(imageData.get(inputJson.getEmployeImageFileName()));
+			plantInspectionModel.setEmployeeImage(empDigitalAsset);
+		}
+		
 		
 		
 		plantInspectionModel = plantInspectionService.save(plantInspectionModel);
@@ -94,7 +99,7 @@ public class InspectionController {
 		  PlantInspectionResult resultModel  = new PlantInspectionResult();
 		  resultModel.setHasDefect(data.getHasDefect());
 		  resultModel.setPlantInspection(plantInspectionModel);
-		  resultModel.setPlantInspectionTemplateId(data.getPlantInspectionTemplateId());
+		  resultModel.setPlantInspectionTemplateId( new PlantInspectionTemplate(data.getPlantInspectionTemplateId()));
 		  resultModel.setResult(data.getResult());
 		  
 		  
@@ -103,9 +108,10 @@ public class InspectionController {
 			 PlantInspectionDefects defectesModel = new PlantInspectionDefects();
 			 defectesModel.setDefectObservation(data.getDefectObservation());
 			
+			if(imageData.get(data.getFileName()) != null) {
 			 DigitalAsset defectDigitalAsset  = digitalAssetService.save(imageData.get(data.getFileName()));
-				
 			 defectesModel.setDefectImage(defectDigitalAsset);
+			}
 			 
 			 if(data.getFileName() != null) {
 				 defectesModel.setHasMedia(true);

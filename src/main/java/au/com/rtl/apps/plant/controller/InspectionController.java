@@ -9,6 +9,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +43,7 @@ import au.com.rtl.apps.plant.service.PlantInspectionResultService;
 import au.com.rtl.apps.plant.service.PlantInspectionService;
 
 @RestController
+@Validated
 @CrossOrigin("*")
 @RequestMapping("/api/v1/operations/jobs/plant/prestart")
 public class InspectionController {
@@ -57,9 +66,9 @@ public class InspectionController {
 	
 	
 	@RequestMapping(value = "/inpection" , method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE  })
-    public ResponseEntity<Map> submitInspection(@RequestParam String inputJsonString,  @RequestParam(value="files") MultipartFile[] filse) throws IOException{
+    public ResponseEntity<Map<String,Object>> submitInspection(@Valid @NotBlank @RequestParam String inputJsonString, @RequestParam(value="files") MultipartFile[] filse) throws IOException{
 		
-		Map<String,String> response = new HashMap ();
+		Map<String,Object> response = new HashMap ();
 		ObjectMapper  mapper  = new ObjectMapper();
 		Map<String, MultipartFile> imageData = new HashMap();
 		for (MultipartFile file : filse) {
@@ -129,11 +138,15 @@ public class InspectionController {
 		  
 		 }
 		 
-		response.put("status", "success");
+		response.put("status", 200);
+		response.put("plantInspectionId", plantInspectionModel.getPlantInspectionId());
+		
 		}catch(Exception e) {
-			response.put("status", "error");
-			response.put("detail", e.getMessage());
+			response.put("status", 500);
+			response.put("error", e.getMessage());
+			 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
 		
        return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -144,19 +157,30 @@ public class InspectionController {
             @RequestParam(value ="size", defaultValue = "3") int size) {
 		 Map<String, Object> response = new HashMap();
 		try {
+		List<Integer> inspectionIds = new ArrayList<Integer>();
 		List<PlantInspection> jsonResponse = new ArrayList<PlantInspection>();
 		 Page<PlantInspection> requestedPage = plantInspectionService.findAllSortByInspectionDate(page, size);
 		 requestedPage.getContent().forEach(jsonResponse::add);
 		
+		 inspectionIds = requestedPage.getContent().stream().map(e-> e.getPlantInspectionId()).collect(Collectors.toList());
+		List<Integer> allInspectinWithDefect =  plantInspectionResultService.findAllinpectionByDefectStatus(inspectionIds, true);
+		
+		 Map<Integer, Integer> defectsWithCount = allInspectinWithDefect
+	                .stream()
+	                .collect(
+	                        Collectors.toMap(Function.identity(), defect -> 1, Integer::sum)
+	                        );
 		response.put("totalElement", requestedPage.getTotalElements());
 		response.put("totalPage", requestedPage.getTotalPages());
 		response.put("numberOfelement", requestedPage.getNumberOfElements());
 		response.put("currentPageNmber", requestedPage.getNumber());
+		response.put("defectsDetails", defectsWithCount);
 		response.put("data", jsonResponse);
 	}catch(Exception e) {
 		
-		response.put("status", "error");
-		response.put("detail", e.getMessage());
+		response.put("status", 500);
+		response.put("error", e.getMessage());
+		 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
     	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }
@@ -179,8 +203,9 @@ public class InspectionController {
 		response.put("data", jsonResponse);
 	}catch(Exception e) {
 		
-		response.put("status", "error");
+		response.put("status", 500);
 		response.put("detail", e.getMessage());
+		 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR); 
 	}
     	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }
@@ -203,9 +228,9 @@ public class InspectionController {
 		response.put("currentPageNmber", requestedPage.getNumber());
 		response.put("data", jsonResponse);
 	}catch(Exception e) {
-		
-		response.put("status", "error");
-		response.put("detail", e.getMessage());
+		response.put("status", 500);
+		response.put("error", e.getMessage());
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
     	 return new ResponseEntity<>(response, HttpStatus.OK); 
     }

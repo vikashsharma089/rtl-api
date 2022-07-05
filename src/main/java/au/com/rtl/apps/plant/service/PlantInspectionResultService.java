@@ -1,5 +1,7 @@
 package au.com.rtl.apps.plant.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,5 +29,10 @@ public class PlantInspectionResultService {
 		return plantInspectionResultRepository.findAllByPlantInspection(InspectionId,  pageble);
 		
 	}
+		
 
+		public List<Integer> findAllinpectionByDefectStatus(List<Integer> inspectionIds,Boolean defectuStatus){
+			
+			return plantInspectionResultRepository.getallinpectionByDefectStatus(inspectionIds, defectuStatus);
+		}
 }

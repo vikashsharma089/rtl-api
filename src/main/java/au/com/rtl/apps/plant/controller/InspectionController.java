@@ -157,25 +157,30 @@ public class InspectionController {
             @RequestParam(value ="size", defaultValue = "3") int size) {
 		 Map<String, Object> response = new HashMap();
 		try {
+			logger.info("getInspection called ");
 		List<Integer> inspectionIds = new ArrayList<Integer>();
 		List<PlantInspection> jsonResponse = new ArrayList<PlantInspection>();
+		logger.info("loading all inspection ");
 		 Page<PlantInspection> requestedPage = plantInspectionService.findAllSortByInspectionDate(page, size);
 		 requestedPage.getContent().forEach(jsonResponse::add);
-		
+		 logger.info("all inspectin loaded ");
 		 inspectionIds = requestedPage.getContent().stream().map(e-> e.getPlantInspectionId()).collect(Collectors.toList());
-		List<Integer> allInspectinWithDefect =  plantInspectionResultService.findAllinpectionByDefectStatus(inspectionIds, true);
-		
+		  logger.info("getting defects by inspectin : {}",inspectionIds);
+		 List<Integer> allInspectinWithDefect =  plantInspectionResultService.findAllinpectionByDefectStatus(inspectionIds, true);
+		 logger.info("Loaded All inspection defect ");
 		 Map<Integer, Integer> defectsWithCount = allInspectinWithDefect
 	                .stream()
 	                .collect(
 	                        Collectors.toMap(Function.identity(), defect -> 1, Integer::sum)
 	                        );
+		 logger.info(" All inspection defect arr : {}",defectsWithCount);
 		response.put("totalElement", requestedPage.getTotalElements());
 		response.put("totalPage", requestedPage.getTotalPages());
 		response.put("numberOfelement", requestedPage.getNumberOfElements());
 		response.put("currentPageNmber", requestedPage.getNumber());
 		response.put("defectsDetails", defectsWithCount);
 		response.put("data", jsonResponse);
+		 logger.info(" All data has been set to json object  ");
 	}catch(Exception e) {
 		
 		response.put("status", 500);

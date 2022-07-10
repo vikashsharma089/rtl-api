@@ -5,10 +5,12 @@ import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,6 +80,11 @@ public class InspectionController {
 		
 	
 		try {
+			
+			 List<String> rosterList = Arrays.asList("A", "B", "C", "D");
+			 List<String> shiftList = Arrays.asList("Day","Night");
+   		     Random rand = new Random();
+
 		
 		PlantInpectionInputs inputJson = mapper.readValue(inputJsonString, PlantInpectionInputs.class);
 		
@@ -90,8 +97,8 @@ public class InspectionController {
 		plantInspectionModel.setLocation(inputJson.getLocation());
 		plantInspectionModel.setInspectionDateAndTime(Instant.now());
 		plantInspectionModel.setPlant(new Plant(inputJson.getPlantId()));
-		plantInspectionModel.setRoster(inputJson.getRoster());
-		plantInspectionModel.setShift(inputJson.getShift());
+		plantInspectionModel.setRoster(rosterList.get(rand.nextInt(rosterList.size())));
+		plantInspectionModel.setShift(shiftList.get(rand.nextInt(shiftList.size())));
 		plantInspectionModel.setEmployee(new Employee(inputJson.getEmployeId()));
 		
 		if(imageData.get(inputJson.getEmployeImageFileName()) != null) {
